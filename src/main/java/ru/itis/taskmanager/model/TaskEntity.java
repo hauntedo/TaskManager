@@ -22,8 +22,13 @@ public class TaskEntity extends AbstractEntity{
 
     private String description;
 
+    public enum State {
+        OPEN, IN_PROGRESS, RESOLVED, COMPLETED
+    }
+
     @Column(name = "task_state")
-    private TaskState taskState;
+    @Enumerated(value = EnumType.STRING)
+    private State taskState;
 
     @ManyToOne
     @JoinColumn(name = "created_by")
