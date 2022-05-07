@@ -6,15 +6,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class TaskDto {
+public class CommentResponse {
 
     private UUID id;
     private String title;
-    private String description;
-    private String taskState;
+    private String content;
+    private String date;
     private String createdBy;
 
 }

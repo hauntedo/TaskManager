@@ -9,12 +9,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class TaskResponse {
 
-    private UUID id;
-    private String firstname;
-    private String lastname;
-    private String username;
-    private String email;
-    private String aboutMe;
+    private UUID uuid;
+    private String title;
+    private String description;
+    private String taskState;
+    private String date;
+    private String createdBy;
+
 }

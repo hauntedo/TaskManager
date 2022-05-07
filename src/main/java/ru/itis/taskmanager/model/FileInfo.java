@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "file")
-public class FileEntity extends AbstractEntity {
+public class FileInfo extends AbstractEntity {
 
     @Column(name = "storage_file_name", nullable = false, unique = true)
     private String storageFileName;
@@ -30,6 +30,6 @@ public class FileEntity extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "activity_id")
-    private ActivityEntity activity;
+    private Activity activity;
 
 }

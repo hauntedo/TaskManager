@@ -2,10 +2,8 @@ package ru.itis.taskmanager.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.apache.catalina.User;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @SuperBuilder
@@ -15,7 +13,7 @@ import java.util.Set;
 @Table(name = "task")
 @Getter
 @Setter
-public class TaskEntity extends AbstractEntity{
+public class Task extends AbstractEntity{
 
     @Column(nullable = false)
     private String title;
@@ -32,14 +30,14 @@ public class TaskEntity extends AbstractEntity{
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private UserEntity createdBy;
+    private User createdBy;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "activity_id", referencedColumnName = "uuid")
-    private ActivityEntity activity;
+    private Activity activity;
 
     @ManyToMany(mappedBy = "tasks")
-    private Set<UserEntity> users;
+    private Set<User> users;
 
 
 

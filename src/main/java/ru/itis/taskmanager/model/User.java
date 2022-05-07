@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "account")
-public class UserEntity extends AbstractEntity {
+public class User extends AbstractEntity {
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, updatable = false)
     private String userName;
 
     @Column(name = "firstname")
@@ -30,18 +30,31 @@ public class UserEntity extends AbstractEntity {
     @Column(name = "about_me")
     private String aboutMe;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne
-    @JoinColumn(name = "activity_id", referencedColumnName = "uuid")
-    private ActivityEntity activity;
+    @OneToOne(mappedBy = "updatedBy")
+    private Activity activity;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "account_task",
     joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "uuid"),
     inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "uuid"))
-    private List<TaskEntity> tasks;
+    private Set<Task> tasks;
+
+    public enum Role {
+        ADMIN, USER
+    }
+
+    public enum State {
+        BANNED, NOT_BANNED
+    }
+
+    @Enumerated(value = EnumType.STRING)
+    private State state;
+
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
 
 }

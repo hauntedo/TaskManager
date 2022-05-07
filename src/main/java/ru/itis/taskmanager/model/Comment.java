@@ -1,19 +1,17 @@
 package ru.itis.taskmanager.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "comment")
 @SuperBuilder
-public class CommentEntity extends AbstractEntity{
+public class Comment extends AbstractEntity{
 
     private String title;
 
@@ -21,11 +19,11 @@ public class CommentEntity extends AbstractEntity{
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private UserEntity createdBy;
+    private User createdBy;
 
     @ManyToOne
     @JoinColumn(name = "activity_id")
-    private ActivityEntity activity;
+    private Activity activity;
 
 
 }

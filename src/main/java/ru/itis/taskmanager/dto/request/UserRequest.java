@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginDto {
+public class UserRequest {
 
+    @NotBlank
     String username;
-    String email;
+
+    @NotBlank
     String password;
 
 }
