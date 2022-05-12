@@ -9,6 +9,9 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+        if (value == null) {
+            return false;
+        }
         int len = value.length();
         if (len < 8) {
             return false;

@@ -8,19 +8,8 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
     <title>Sign Up</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sign-in/">
-
-    <!-- Bootstrap core CSS -->
-    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
-    <style>
-        .error {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="<@spring.url "/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<@spring.url "/css/signin.css"/>">
 </head>
 <body class="text-center">
 
@@ -29,36 +18,47 @@
         <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
         <@spring.bind path="signUpForm"/>
         <div class="form-floating">
-            <@spring.formInput "signUpForm.firstName" "placeholder='Firstname'"/>
-            <label for="floatingInput">Firstname</label>
+            <@spring.formInput "signUpForm.firstName" "placeholder='Firstname' class=form-control"/>
+            <label for="floatingInput">First name</label>
             <@spring.showErrors "<br>" "error"/>
+            <br>
         </div>
 
         <div class="form-floating">
-            <@spring.formInput "signUpForm.lastName" "placeholder='Lastname'"/>
+            <@spring.formInput "signUpForm.lastName" "placeholder='Lastname' class=form-control"/>
             <label for="floatingInput">Lastname</label>
             <@spring.showErrors "<br>" "error"/>
+            <br>
         </div>
 
         <div class="form-floating">
-            <@spring.formInput "signUpForm.userName" "placeholder='Username'"/>
+            <@spring.formInput "signUpForm.userName" "placeholder='Username' class=form-control"/>
             <label for="floatingInput">Username</label>
             <@spring.showErrors "<br>" "error"/>
+            <br>
         </div>
 
         <div class="form-floating">
-            <@spring.formInput "signUpForm.email" "placeholder='Email'"/>
+            <@spring.formInput "signUpForm.email" "placeholder='Email' class=form-control"/>
             <label for="floatingInput">Email</label>
             <@spring.showErrors "<br>" "error"/>
+            <br>
         </div>
 
         <div class="form-floating">
-            <@spring.formPasswordInput "signUpForm.password" "placeholder='Password'"/>
+            <@spring.formPasswordInput "signUpForm.password" "placeholder='Password' class=form-control"/>
             <label for="floatingPassword">Password</label>
             <@spring.showErrors "<br>" "error"/>
+            <br>
         </div>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+        <p class="text-center">
+            <span class="light">
+                Already have login and password?
+                <a href="/sign_in">Sign in</a>
+            </span>
+        </p>
     </form>
 </main>
 

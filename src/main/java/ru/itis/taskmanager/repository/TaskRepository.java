@@ -6,4 +6,5 @@ import ru.itis.taskmanager.model.Task;
 import java.util.UUID;
 
 public interface TaskRepository extends CrudRepository<Task, UUID> {
+
 }

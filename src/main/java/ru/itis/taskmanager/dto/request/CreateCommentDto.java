@@ -5,16 +5,19 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class UserRequest {
+public class CreateCommentDto {
 
     @NotBlank
-    String username;
+    @Size(max = 20)
+    String title;
 
     @NotBlank
-    String password;
+    @Size(max = 512)
+    String content;
 
 }

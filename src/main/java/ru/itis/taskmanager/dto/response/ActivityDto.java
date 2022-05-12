@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ActivityResponse {
+public class ActivityDto {
 
-    private List<CommentResponse> commentResponseList;
+    private List<CommentDto> commentDtoList;
 
 }

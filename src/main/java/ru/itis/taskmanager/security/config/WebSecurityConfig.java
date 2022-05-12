@@ -1,4 +1,4 @@
-package ru.itis.taskmanager.config.security;
+package ru.itis.taskmanager.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/sign_up").permitAll()
                     .antMatchers("/profile").authenticated()
+                    .antMatchers("/profile/**").authenticated()
                     .and()
                 .formLogin()
                     .loginPage("/sign_in")
@@ -43,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .and()
                 .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/sign_out"))
                     .logoutSuccessUrl("/sign_in")
                     .deleteCookies("JSESSIONID")
                     .invalidateHttpSession(true);
