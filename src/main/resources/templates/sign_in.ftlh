@@ -8,7 +8,7 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
     <title>Sign In</title>
-    <link rel="stylesheet" href="<@spring.url "/css/bootstrap.min.css"/>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="<@spring.url "/css/signin.css"/>">
 </head>
 <body class="text-center">
@@ -16,6 +16,10 @@
 <main class="form-signin">
     <form action="/sign_in" method="post">
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <#if message??>
+            <h6 class="text-danger">${message}</h6>
+        </#if>
 
         <div class="form-floating">
             <input type="text" name="userName" class="form-control" id="floatingInput" placeholder="Username">

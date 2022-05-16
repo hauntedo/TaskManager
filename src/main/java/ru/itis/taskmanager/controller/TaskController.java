@@ -18,6 +18,7 @@ import ru.itis.taskmanager.model.User;
 import ru.itis.taskmanager.service.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -92,7 +93,7 @@ public class TaskController {
     public String addComment(@AuthenticationPrincipal UserDetails userDetails,
                                    @PathVariable("task-id") String taskId,
                                    CreateCommentDto commentDto,
-                                   @RequestParam("file") MultipartFile[] files) {
+                                   @RequestParam(value = "file", required = false) MultipartFile[] files) {
         String commentId = commentService.addComment(commentDto, taskId, userDetails.getUsername());
         fileService.upload(files, commentId, userDetails.getUsername());
         return "redirect:/tasks/" + taskId;

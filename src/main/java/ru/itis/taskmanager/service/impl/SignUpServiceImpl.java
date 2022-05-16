@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.itis.taskmanager.dto.request.SignUpForm;
+import ru.itis.taskmanager.exception.PasswordMismatchException;
 import ru.itis.taskmanager.exception.UsernameExistException;
 import ru.itis.taskmanager.model.User;
 import ru.itis.taskmanager.repository.UserRepository;
@@ -19,9 +20,9 @@ public class SignUpServiceImpl implements SignUpService {
     @Override
     public void registerNewAccount(SignUpForm accountForm) {
         if (isUsernameExist(accountForm.getUserName())) {
-
             throw new UsernameExistException("Username is exist: " + accountForm.getUserName());
-
+        } else if(!accountForm.getPassword().equals(accountForm.getCheckPassword())) {
+            throw new PasswordMismatchException();
         } else {
             User newUser = User.builder()
                     .firstName(accountForm.getFirstName())

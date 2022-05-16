@@ -47,23 +47,25 @@ public class FileServiceImpl implements FileService {
                     .orElseThrow(CommentNotFoundException::new);
             User user = userRepository.findUserByUserName(username).orElseThrow(UserNotFoundException::new);
             for (MultipartFile file : files) {
-                String extension = file.getOriginalFilename().substring(
-                        file.getOriginalFilename().lastIndexOf("."));
-                String storageFileName = UUID.randomUUID() + extension;
+                if (file.getSize()!=0) {
+                    String extension = file.getOriginalFilename().substring(
+                            file.getOriginalFilename().lastIndexOf("."));
+                    String storageFileName = UUID.randomUUID() + extension;
 
-                FileInfo fileInfo = FileInfo.builder()
-                        .storageFileName(storageFileName)
-                        .contentType(file.getContentType())
-                        .originalFileName(file.getOriginalFilename())
-                        .size(file.getSize())
-                        .comment(comment)
-                        .uploadBy(user)
-                        .build();
-                try {
-                    Files.copy(file.getInputStream(), Paths.get(storagePath, fileInfo.getStorageFileName()));
-                    fileInfoRepository.save(fileInfo);
-                } catch (IOException e) {
-                    throw new IllegalArgumentException(e);
+                    FileInfo fileInfo = FileInfo.builder()
+                            .storageFileName(storageFileName)
+                            .contentType(file.getContentType())
+                            .originalFileName(file.getOriginalFilename())
+                            .size(file.getSize())
+                            .comment(comment)
+                            .uploadBy(user)
+                            .build();
+                    try {
+                        Files.copy(file.getInputStream(), Paths.get(storagePath, fileInfo.getStorageFileName()));
+                        fileInfoRepository.save(fileInfo);
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
                 }
             }
         }

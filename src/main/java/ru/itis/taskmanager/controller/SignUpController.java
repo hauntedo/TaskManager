@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.taskmanager.dto.request.SignUpForm;
+import ru.itis.taskmanager.exception.PasswordMismatchException;
+import ru.itis.taskmanager.exception.UsernameExistException;
 import ru.itis.taskmanager.service.SignUpService;
 
 import javax.validation.Valid;
@@ -33,8 +35,16 @@ public class SignUpController {
             model.addAttribute("signUpForm", form);
             return "sign_up";
         }
-        signUpService.registerNewAccount(form);
-        return "redirect:/sign_in";
+        try {
+            signUpService.registerNewAccount(form);
+            return "redirect:/sign_in";
+        } catch(UsernameExistException e) {
+            model.addAttribute("message", "Username is exist");
+            return "sign_up";
+        } catch (PasswordMismatchException e) {
+            model.addAttribute("message", "Passwords mismatch");
+            return "sign_up";
+        }
     }
 
 
