@@ -16,16 +16,14 @@ import java.util.List;
 public class Activity extends AbstractEntity {
 
     @OneToMany(mappedBy = "activity")
-    private List<FileInfo> files;
-
-    @OneToMany(mappedBy = "activity")
     private List<Comment> comments;
 
-    @OneToOne(mappedBy = "activity")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_id", referencedColumnName = "uuid")
     private Task task;
 
-    @OneToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "uuid")
+    @ManyToOne
+    @JoinColumn(name = "account_id")
     private User updatedBy;
 
 }

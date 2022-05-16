@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @SuperBuilder
@@ -21,7 +22,7 @@ public class Task extends AbstractEntity{
     private String description;
 
     public enum State {
-        OPEN, IN_PROGRESS, RESOLVED, COMPLETED
+        OPEN, IN_PROGRESS, RESOLVED, COMPLETED, DELETED
     }
 
     @Column(name = "task_state")
@@ -32,12 +33,13 @@ public class Task extends AbstractEntity{
     @JoinColumn(name = "created_by")
     private User createdBy;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "activity_id", referencedColumnName = "uuid")
-    private Activity activity;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "account_task",
+            joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "uuid"),
+            inverseJoinColumns = @JoinColumn(name = "account_id", referencedColumnName = "uuid"))
+    private Set<User> users = new HashSet<>();
 
-    @ManyToMany(mappedBy = "tasks")
-    private Set<User> users;
+
 
 
 

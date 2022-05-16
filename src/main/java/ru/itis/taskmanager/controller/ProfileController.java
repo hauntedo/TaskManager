@@ -23,9 +23,7 @@ public class ProfileController {
     @GetMapping
     public String getProfilePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         UserDto userDto = userService.findUserByUsername(userDetails.getUsername());
-        model.addAttribute("fullname", userDto.getFirstName() + " " + userDto.getLastName());
-        model.addAttribute("email", userDto.getEmail());
-        model.addAttribute("aboutme", userDto.getAboutMe());
+        model.addAttribute("user", userDto);
         return "profile";
     }
 
@@ -40,7 +38,7 @@ public class ProfileController {
         return "edit_profile";
     }
 
-    @PutMapping(value = "/edit")
+    @PostMapping(value = "/edit")
     public String editProfile(@Valid EditUserDto userDto, BindingResult result, Model model,
                               @AuthenticationPrincipal UserDetails userDetails) {
         if (result.hasErrors()) {

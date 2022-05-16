@@ -30,7 +30,7 @@ public class TaskDto {
                 .description(task.getDescription())
                 .taskState(String.valueOf(task.getTaskState()))
                 .date(String.valueOf(task.getCreateDate()))
-                .createdBy(String.valueOf(task.getCreatedBy()))
+                .createdBy(task.getCreatedBy().getUserName())
                 .build();
     }
 

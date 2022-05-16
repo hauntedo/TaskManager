@@ -29,7 +29,11 @@ public class FileInfo extends AbstractEntity {
     private String contentType;
 
     @ManyToOne
-    @JoinColumn(name = "activity_id")
-    private Activity activity;
+    @JoinColumn(name = "account_id")
+    private User uploadBy;
+
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
 }

@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -33,14 +35,8 @@ public class User extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne(mappedBy = "updatedBy")
-    private Activity activity;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "account_task",
-    joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "uuid"),
-    inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "uuid"))
-    private Set<Task> tasks;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
+    private Set<Task> tasks = new HashSet<>();
 
     public enum Role {
         ADMIN, USER

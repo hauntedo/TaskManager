@@ -1,19 +1,19 @@
 package ru.itis.taskmanager.model;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "comment")
 @SuperBuilder
+@Getter
+@Setter
 public class Comment extends AbstractEntity{
-
-    private String title;
 
     private String content;
 
@@ -24,6 +24,9 @@ public class Comment extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "activity_id")
     private Activity activity;
+
+    @OneToMany(mappedBy = "comment")
+    private List<FileInfo> files;
 
 
 }
