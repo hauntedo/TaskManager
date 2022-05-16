@@ -19,6 +19,7 @@
 <div class="container">
     <div class="main-body">
         <div class="row gutters-sm">
+            <div class="col-md-2"></div>
             <div class="col-md-8">
                 <div class="card mb-3">
                     <div class="card-body">
@@ -36,7 +37,7 @@
                                 <h6 class="mb-0">About me</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <#if aboutme??>
+                                <#if user.aboutMe??>
                                     ${user.aboutMe}
                                 </#if>
                             </div>
@@ -60,6 +61,7 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-2"></div>
         </div>
     </div>
 </div>

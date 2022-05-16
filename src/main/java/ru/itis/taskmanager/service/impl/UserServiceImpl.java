@@ -35,11 +35,19 @@ public class UserServiceImpl implements UserService {
     public void updateUserByUsername(EditUserDto userDto, String username) {
         User user = userRepository.findUserByUserName(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setAboutMe(userDto.getAboutMe());
-        user.setHashPassword(passwordEncoder.encode(userDto.getPassword()));
-        userRepository.save(user);
+        if (userDto.getPassword() != null) {
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+            user.setAboutMe(userDto.getAboutMe());
+            user.setHashPassword(passwordEncoder.encode(userDto.getPassword()));
+            userRepository.save(user);
+        } else {
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+            user.setAboutMe(userDto.getAboutMe());
+            userRepository.save(user);
+        }
+
     }
 
     @Override

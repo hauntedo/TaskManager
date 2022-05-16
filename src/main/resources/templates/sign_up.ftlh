@@ -22,28 +22,28 @@
         <@spring.bind path="signUpForm"/>
         <div class="form-floating">
             <@spring.formInput "signUpForm.firstName" "placeholder='Firstname' class=form-control required"/>
-            <label for="floatingInput">First name</label>
+            <label for="firstName">First name</label>
             <@spring.showErrors "<br>" "error"/>
             <br>
         </div>
 
         <div class="form-floating">
             <@spring.formInput "signUpForm.lastName" "placeholder='Lastname' class=form-control required"/>
-            <label for="floatingInput">Lastname</label>
+            <label for="lastName">Lastname</label>
             <@spring.showErrors "<br>" "error"/>
             <br>
         </div>
 
         <div class="form-floating">
             <@spring.formInput "signUpForm.userName" "placeholder='Username' class=form-control required"/>
-            <label for="floatingInput">Username</label>
+            <label for="userName">Username</label>
             <@spring.showErrors "<br>" "error"/>
             <br>
         </div>
 
         <div class="form-floating">
             <@spring.formInput "signUpForm.email" "placeholder='Email' class=form-control required"/>
-            <label for="floatingInput">Email</label>
+            <label for="email">Email</label>
             <@spring.showErrors "<br>" "error"/>
             <br>
         </div>
@@ -51,7 +51,7 @@
         <div class="form-floating">
             <@spring.formPasswordInput "signUpForm.password" "id='password' name='password'
             placeholder='Password' class=form-control required"/>
-            <label for="floatingPassword">Password</label>
+            <label for="password">Password</label>
             <@spring.showErrors "<br>" "error"/>
             <br>
         </div>
@@ -59,7 +59,7 @@
         <div class="form-floating">
             <@spring.formPasswordInput "signUpForm.checkPassword" "id='checkPassword' name='checkPassword'
             placeholder='Password' class=form-control required"/>
-            <label for="floatingPassword">Repeat Password</label>
+            <label for="repeatPassword">Repeat Password</label>
             <@spring.showErrors "<br>" "error"/>
             <br>
         </div>

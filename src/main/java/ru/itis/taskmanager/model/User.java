@@ -43,7 +43,7 @@ public class User extends AbstractEntity {
     }
 
     public enum State {
-        BANNED, NOT_BANNED
+        BANNED, NOT_BANNED, DELETED
     }
 
     @Enumerated(value = EnumType.STRING)

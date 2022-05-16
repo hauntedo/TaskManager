@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.taskmanager.dto.request.EditUserDto;
+import ru.itis.taskmanager.dto.request.SignUpForm;
 import ru.itis.taskmanager.dto.response.UserDto;
 import ru.itis.taskmanager.service.UserService;
 
@@ -31,21 +32,16 @@ public class ProfileController {
     public String getProfileEditPage(Model model,
                                      @AuthenticationPrincipal UserDetails userDetails) {
         UserDto userDto = userService.findUserByUsername(userDetails.getUsername());
-        model.addAttribute("firstname", userDto.getFirstName());
-        model.addAttribute("lastname", userDto.getLastName());
-        model.addAttribute("email", userDto.getEmail());
-        model.addAttribute("editProfileForm", new EditUserDto());
+        model.addAttribute("user", userDto);
+        model.addAttribute("editUserDto", new EditUserDto());
         return "edit_profile";
     }
 
     @PostMapping(value = "/edit")
-    public String editProfile(@Valid EditUserDto userDto, BindingResult result, Model model,
+    public String editProfile(EditUserDto userDto, Model model,
                               @AuthenticationPrincipal UserDetails userDetails) {
-        if (result.hasErrors()) {
-            model.addAttribute("editProfileForm", userDto);
-            return "edit_profile";
-        }
         userService.updateUserByUsername(userDto , userDetails.getUsername());
+        model.addAttribute("editUserDto", userDto);
         return "redirect:/profile";
     }
 
