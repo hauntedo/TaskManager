@@ -1,9 +1,9 @@
 package ru.itis.taskmanager.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.itis.taskmanager.converter.DateConverter;
 import ru.itis.taskmanager.model.Task;
 
 import java.util.List;

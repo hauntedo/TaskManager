@@ -7,4 +7,6 @@ public interface ActivityService {
 
     ActivityDto findByTaskId(String taskId);
 
+    ActivityDto convertCommentDateTime(ActivityDto activityDto);
+
 }

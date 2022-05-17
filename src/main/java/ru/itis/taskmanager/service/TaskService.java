@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface TaskService {
 
+    List<TaskDto> convertedDateTime(List<TaskDto> taskDtoList);
+
     List<TaskDto> findAllTasksWhereTaskStateNotCompleted();
 
     void addTask(CreateTaskDto createTaskDto, String username);

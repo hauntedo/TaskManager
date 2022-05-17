@@ -3,6 +3,7 @@ package ru.itis.taskmanager.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itis.taskmanager.converter.DateConverter;
 import ru.itis.taskmanager.dto.request.CreateTaskDto;
 import ru.itis.taskmanager.dto.response.TaskDto;
 import ru.itis.taskmanager.exception.TaskNotFoundException;
@@ -15,6 +16,8 @@ import ru.itis.taskmanager.repository.TaskRepository;
 import ru.itis.taskmanager.repository.UserRepository;
 import ru.itis.taskmanager.service.TaskService;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.itis.taskmanager.dto.response.TaskDto.from;
@@ -25,10 +28,11 @@ import static ru.itis.taskmanager.model.Task.State.COMPLETED;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+
+    private final DateConverter dateConverter;
     private final UserRepository userRepository;
     private final ActivityRepository activityRepository;
 
-    //доработать
     @Override
     public List<TaskDto> findAllTasksWhereTaskStateNotCompleted() {
         List<Task> taskList = new ArrayList<>();
@@ -41,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }
         taskList.removeAll(helpTaskList);
-        return from(taskList);
+        return convertedDateTime(from(taskList));
     }
 
     @Transactional
@@ -111,6 +115,18 @@ public class TaskServiceImpl implements TaskService {
                 throw new IllegalArgumentException("Unknown command");
         }
 
+    }
+
+    @Override
+    public List<TaskDto> convertedDateTime(List<TaskDto> taskDtoList) {
+        if (!taskDtoList.isEmpty()) {
+            for (TaskDto taskDto : taskDtoList) {
+                LocalDateTime ldt = dateConverter.convert(taskDto.getDate());
+                String newDate = Objects.requireNonNull(ldt).toString().replace("T", " ");
+                taskDto.setDate(newDate.substring(0, newDate.indexOf(".")));
+            }
+        }
+        return taskDtoList;
     }
 
 
