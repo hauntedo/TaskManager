@@ -23,7 +23,7 @@ public class SignUpController {
     @GetMapping
     public String getSignUpPage(Authentication authentication, Model model) {
         if (authentication != null) {
-            return "redirect:/profile";
+            return "redirect:/";
         }
         model.addAttribute("signUpForm", new SignUpForm());
         return "sign_up";

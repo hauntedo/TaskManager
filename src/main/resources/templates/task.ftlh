@@ -31,16 +31,15 @@
                 <div class="mb-3">
                         <#if task.taskState != "COMPLETED">
                             <form action="/tasks/${task.uuid}" method="post" enctype="multipart/form-data">
-                                <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                                <label for="exampleFormControlTextarea1" class="form-label">Textarea</label>
                                 <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                <label for="formFileMultiple" class="form-label">Multiple files input example</label>
+                                <label for="formFileMultiple" class="form-label">Multiple files input</label>
                                 <input class="form-control" name="file" type="file" id="formFileMultiple" multiple>
                                 <button class="btn btn-primary btn-lg" type="submit">Save</button>
                             </form>
                         </#if>
                 </div>
                     <div class="d-grid gap-2 d-md-block">
-                        <#--доделать до правильной функциональности кнопок-->
                         <#if chief>
                             <#if task.taskState == "RESOLVED">
                                 <a class="btn btn-primary btn-lg" role="button"

@@ -9,7 +9,6 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Edit profile</title>
-    <link rel="stylesheet" href="<@spring.url "/css/profile.css"/>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body class="text-center">
@@ -46,9 +45,8 @@
                                     <label for="aboutMe" class="col-sm-3 col-form-label">
                                         <h6 class="mb-0">About me</h6></label>
                                     <div class="col-sm-9">
-                                        <@spring.formTextarea "editUserDto.aboutMe" "class='form-control'
-                                               id='aboutMe' name='aboutMe'
-                                               placeholder='${user.aboutMe}'"/>
+                                        <textarea id="aboutMe" class="form-control" name="aboutMe"
+                                                  autocomplete="on">${user.aboutMe}</textarea>
                                     </div>
                                 </div>
                             <#else>
@@ -56,9 +54,8 @@
                                     <label for="aboutMe" class="col-sm-3 col-form-label">
                                         <h6 class="mb-0">About me</h6></label>
                                     <div class="col-sm-9">
-                                        <@spring.formTextarea "editUserDto.aboutMe" "class='form-control'
-                                               id='aboutMe' name='aboutMe'
-                                               placeholder='About me'"/>
+                                        <textarea id="aboutMe" class="form-control" name="aboutMe"
+                                                  placeholder="${user.aboutMe}" autocomplete="on"></textarea>
                                     </div>
                                 </div>
                             </#if>

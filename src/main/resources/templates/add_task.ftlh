@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add task</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link rel="stylesheet" href="<@spring.url "/css/signin.css"/>">
+
 </head>
 <body class="text-center">
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
@@ -20,31 +20,27 @@
     <@spring.bind path="taskForm"/>
     <div class="main-body">
         <div class="row">
+            <div class="col-lg-2"></div>
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <form action="" method="post">
                             <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Title</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <@spring.formInput "taskForm.title" "placeholder='Title' class=form-control"/>
-                                    <label for="floatingInput"></label>
-                                    <@spring.showErrors "<br>" "error"/>
-                                    <br>
+                                <label for="aboutMe" class="col-sm-3 col-form-label">
+                                    <h6 class="mb-0">Title</h6></label>
+                                <div class="col-sm-9">
+                                        <input id="title" class="form-control" name="title"
+                                                  placeholder="Title" required/>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Description</h6>
+                                <label for="aboutMe" class="col-sm-3 col-form-label">
+                                    <h6 class="mb-0">Description</h6></label>
+                                <div class="col-sm-9">
+                                        <textarea id="description" class="form-control" name="description"
+                                                  placeholder="Description" autocomplete="on"></textarea>
                                 </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <@spring.formInput "taskForm.description" "placeholder='Description' class=form-control"/>
-                                    <label for="floatingInput"></label>
-                                    <@spring.showErrors "<br>" "error"/>
-                                    <br>
-                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-9 text-secondary">
@@ -56,6 +52,7 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-2"></div>
         </div>
     </div>
 </div>

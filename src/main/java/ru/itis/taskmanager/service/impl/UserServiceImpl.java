@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserByUsername(EditUserDto userDto, String username) {
         User user = userRepository.findUserByUserName(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        if (userDto.getPassword() != null) {
+        if (userDto.getPassword().length() != 0) {
             user.setFirstName(userDto.getFirstName());
             user.setLastName(userDto.getLastName());
             user.setAboutMe(userDto.getAboutMe());

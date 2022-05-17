@@ -19,7 +19,7 @@ public class SignInController {
                                 @RequestParam(value = "error", required = false) String error,
                                 Model model) {
         if (authentication!=null) {
-            return "redirect:/profile";
+            return "redirect:/";
         }
         if (error != null) {
             model.addAttribute("message", "Username or Password incorrect");
