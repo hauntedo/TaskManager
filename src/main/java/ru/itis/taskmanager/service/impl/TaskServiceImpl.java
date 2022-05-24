@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.taskmanager.converter.DateConverter;
-import ru.itis.taskmanager.dto.request.CreateTaskDto;
-import ru.itis.taskmanager.dto.response.TaskDto;
+import ru.itis.taskmanager.dto.request.TaskRequest;
+import ru.itis.taskmanager.dto.response.TaskResponse;
 import ru.itis.taskmanager.exception.TaskNotFoundException;
 import ru.itis.taskmanager.exception.UserNotFoundException;
 import ru.itis.taskmanager.model.Activity;
@@ -16,11 +16,10 @@ import ru.itis.taskmanager.repository.TaskRepository;
 import ru.itis.taskmanager.repository.UserRepository;
 import ru.itis.taskmanager.service.TaskService;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static ru.itis.taskmanager.dto.response.TaskDto.from;
+import static ru.itis.taskmanager.dto.response.TaskResponse.from;
 import static ru.itis.taskmanager.model.Task.State.COMPLETED;
 
 @Service
@@ -34,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
     private final ActivityRepository activityRepository;
 
     @Override
-    public List<TaskDto> findAllTasksWhereTaskStateNotCompleted() {
+    public List<TaskResponse> findAllTasksWhereTaskStateNotCompleted() {
         List<Task> taskList = new ArrayList<>();
         List<Task> helpTaskList = new ArrayList<>();
         Iterable<Task> iterable = taskRepository.findAll();
@@ -50,12 +49,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     @Override
-    public void addTask(CreateTaskDto createTaskDto, String username) {
+    public void addTask(TaskRequest taskRequest, String username) {
 
         User user = userRepository.getByUserName(username);
         Task task = Task.builder()
-                .title(createTaskDto.getTitle())
-                .description(createTaskDto.getDescription())
+                .title(taskRequest.getTitle())
+                .annotation(taskRequest.getAnnotation())
+                .description(taskRequest.getDescription())
                 .taskState(Task.State.OPEN)
                 .createdBy(user)
                 .build();
@@ -70,16 +70,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto findTaskById(String id) {
+    public TaskResponse findTaskById(String id) {
         Task task = taskRepository.findById(UUID.fromString(id)).orElseThrow();
         return from(task);
     }
 
     @Override
-    public List<TaskDto> findTasksByUsername(String username) {
+    public List<TaskResponse> findTasksByUsername(String username) {
         User user = userRepository.findUserByUserName(username).orElseThrow(UserNotFoundException::new);
         List<Task> tasks = taskRepository.findTasksByUsers_uuid(user.getUuid());
-        return from(tasks);
+
+        return convertedDateTime(from(tasks));
     }
 
     @Override
@@ -118,15 +119,31 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> convertedDateTime(List<TaskDto> taskDtoList) {
-        if (!taskDtoList.isEmpty()) {
-            for (TaskDto taskDto : taskDtoList) {
-                LocalDateTime ldt = dateConverter.convert(taskDto.getDate());
-                String newDate = Objects.requireNonNull(ldt).toString().replace("T", " ");
-                taskDto.setDate(newDate.substring(0, newDate.indexOf(".")));
+    public void updateTask(TaskRequest taskRequest, String taskId) {
+        Task task = taskRepository.findById(UUID.fromString(taskId))
+                .orElseThrow(TaskNotFoundException::new);
+        if (!taskRequest.getTitle().isEmpty()) {
+            task.setTitle(taskRequest.getTitle());
+        }
+        if (!taskRequest.getAnnotation().isEmpty()) {
+            task.setAnnotation(task.getAnnotation());
+        }
+        if (!taskRequest.getDescription().isEmpty()) {
+            task.setDescription(taskRequest.getDescription());
+        }
+        taskRepository.save(task);
+    }
+
+    @Override
+    public List<TaskResponse> convertedDateTime(List<TaskResponse> taskResponseList) {
+        if (!taskResponseList.isEmpty()) {
+            for (TaskResponse taskResponse : taskResponseList) {
+                LocalDateTime ldt = dateConverter.convert(taskResponse.getDate());
+                String newDate = Objects.requireNonNull(ldt).toString().replace("-", ".");
+                taskResponse.setDate(newDate.substring(0, newDate.indexOf("T")));
             }
         }
-        return taskDtoList;
+        return taskResponseList;
     }
 
 

@@ -2,17 +2,11 @@ package ru.itis.taskmanager.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.itis.taskmanager.converter.DateConverter;
-import ru.itis.taskmanager.dto.request.CreateCommentDto;
-import ru.itis.taskmanager.dto.response.ActivityDto;
-import ru.itis.taskmanager.dto.response.CommentDto;
+import ru.itis.taskmanager.dto.response.ActivityResponse;
+import ru.itis.taskmanager.dto.response.CommentResponse;
 import ru.itis.taskmanager.exception.ActivityNotFoundException;
-import ru.itis.taskmanager.exception.UserNotFoundException;
 import ru.itis.taskmanager.model.Activity;
-import ru.itis.taskmanager.model.Comment;
-import ru.itis.taskmanager.model.Task;
-import ru.itis.taskmanager.model.User;
 import ru.itis.taskmanager.repository.ActivityRepository;
 import ru.itis.taskmanager.repository.CommentRepository;
 import ru.itis.taskmanager.repository.TaskRepository;
@@ -24,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static ru.itis.taskmanager.dto.response.ActivityDto.from;
+import static ru.itis.taskmanager.dto.response.ActivityResponse.from;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +31,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final CommentRepository commentRepository;
 
     @Override
-    public ActivityDto findByTaskId(String taskId) {
+    public ActivityResponse findByTaskId(String taskId) {
         Activity activity = activityRepository.findActivityByTask_Uuid(UUID.fromString(taskId))
                 .orElseThrow(ActivityNotFoundException::new);
 
@@ -45,18 +39,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ActivityDto convertCommentDateTime(ActivityDto activityDto) {
-        List<CommentDto> commentDtoList = activityDto.getCommentDtoList();
-        if (!commentDtoList.isEmpty()) {
-            for (CommentDto comment : commentDtoList) {
+    public ActivityResponse convertCommentDateTime(ActivityResponse activityResponse) {
+        List<CommentResponse> commentResponseList = activityResponse.getCommentResponseList();
+        if (!commentResponseList.isEmpty()) {
+            for (CommentResponse comment : commentResponseList) {
                 LocalDateTime ldt = dateConverter.convert(comment.getDate());
                 String newDate = Objects.requireNonNull(ldt).toString()
                         .replace("T", " ");
                 comment.setDate(newDate.substring(0, newDate.indexOf(".")));
             }
-            activityDto.setCommentDtoList(commentDtoList);
+            activityResponse.setCommentResponseList(commentResponseList);
         }
-        return activityDto;
+        return activityResponse;
     }
 
 

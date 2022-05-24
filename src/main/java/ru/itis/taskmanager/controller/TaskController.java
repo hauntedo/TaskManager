@@ -8,17 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.itis.taskmanager.dto.request.CreateCommentDto;
-import ru.itis.taskmanager.dto.request.CreateTaskDto;
-import ru.itis.taskmanager.dto.response.ActivityDto;
-import ru.itis.taskmanager.dto.response.TaskDto;
-import ru.itis.taskmanager.dto.response.UserDto;
-import ru.itis.taskmanager.model.Task;
-import ru.itis.taskmanager.model.User;
+import ru.itis.taskmanager.dto.request.CommentRequest;
+import ru.itis.taskmanager.dto.request.TaskRequest;
+import ru.itis.taskmanager.dto.response.ActivityResponse;
+import ru.itis.taskmanager.dto.response.TaskResponse;
+import ru.itis.taskmanager.dto.response.UserResponse;
 import ru.itis.taskmanager.service.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -41,20 +38,20 @@ public class TaskController {
 
     @GetMapping("/add")
     public String getAddTaskPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("taskForm", new CreateTaskDto());
+        model.addAttribute("taskForm", new TaskRequest());
         model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));
         return "add_task";
     }
 
     @PostMapping("/add")
-    public String addTaskPage(@Valid CreateTaskDto createTaskDto, BindingResult result, Model model,
+    public String addTaskPage(@Valid TaskRequest taskRequest, BindingResult result, Model model,
                               @AuthenticationPrincipal UserDetails userDetails) {
         if (result.hasErrors()) {
-            model.addAttribute("taskForm", createTaskDto);
+            model.addAttribute("taskForm", taskRequest);
             model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));
             return "add_task";
         }
-        taskService.addTask(createTaskDto, userDetails.getUsername());
+        taskService.addTask(taskRequest, userDetails.getUsername());
         return "redirect:/tasks";
     }
 
@@ -63,9 +60,9 @@ public class TaskController {
     public String getTaskPage(@PathVariable("task-id") String taskId, Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
                               @RequestParam(name = "action", required = false) String action) {
-        TaskDto task = taskService.findTaskById(taskId);
-        UserDto user = userService.findUserByUsername(userDetails.getUsername());
-        ActivityDto activity = activityService.findByTaskId(taskId);
+        TaskResponse task = taskService.findTaskById(taskId);
+        UserResponse user = userService.findUserByUsername(userDetails.getUsername());
+        ActivityResponse activity = activityService.findByTaskId(taskId);
 
         //проверяет, создал ли пользователь эту задачу
         Boolean isChief = userService.isChiefUserForTask(task, userDetails.getUsername());
@@ -92,7 +89,7 @@ public class TaskController {
     @PostMapping("/{task-id}")
     public String addComment(@AuthenticationPrincipal UserDetails userDetails,
                                    @PathVariable("task-id") String taskId,
-                                   CreateCommentDto commentDto,
+                                   CommentRequest commentDto,
                                    @RequestParam(value = "file", required = false) MultipartFile[] files) {
         String commentId = commentService.addComment(commentDto, taskId, userDetails.getUsername());
         fileService.upload(files, commentId, userDetails.getUsername());
@@ -103,12 +100,37 @@ public class TaskController {
     @GetMapping("/my")
     public String getMyTasksPage(Model model,
                                  @AuthenticationPrincipal UserDetails userDetails) {
-        UserDto user = userService.findUserByUsername(userDetails.getUsername());
-        List<TaskDto> tasks = taskService.findTasksByUsername(userDetails.getUsername());
+        UserResponse user = userService.findUserByUsername(userDetails.getUsername());
+        List<TaskResponse> tasks = taskService.findTasksByUsername(userDetails.getUsername());
         model.addAttribute("tasks", tasks);
         model.addAttribute("user", user);
         return "tasks";
     }
+
+    @GetMapping("/{task-id}/edit")
+    public String getEditTaskPage(Model model,
+                                  @AuthenticationPrincipal UserDetails userDetails,
+                                  @PathVariable("task-id") String taskId) {
+        model.addAttribute("taskForm", new TaskRequest());
+        model.addAttribute("task", taskService.findTaskById(taskId));
+        return "edit_task";
+    }
+
+    @PostMapping("/{task-id}/edit")
+    public String editTask(@Valid TaskRequest taskRequest, BindingResult result, Model model,
+                           @AuthenticationPrincipal UserDetails userDetails, @PathVariable("task-id") String taskId) {
+        TaskResponse taskResponse = taskService.findTaskById(taskId);
+        if (userService.isChiefUserForTask(taskResponse, userDetails.getUsername())) {
+            if (result.hasErrors()) {
+                model.addAttribute("taskForm", taskRequest);
+                model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));
+                return "edit_task";
+            }
+            taskService.updateTask(taskRequest, taskId);
+        }
+        return "redirect:/tasks/" + taskId;
+    }
+
 
 
 }

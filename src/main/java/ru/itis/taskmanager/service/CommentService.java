@@ -1,7 +1,7 @@
 package ru.itis.taskmanager.service;
 
-import ru.itis.taskmanager.dto.request.CreateCommentDto;
+import ru.itis.taskmanager.dto.request.CommentRequest;
 
 public interface CommentService {
-    String addComment(CreateCommentDto commentDto, String taskId, String username);
+    String addComment(CommentRequest commentDto, String taskId, String username);
 }

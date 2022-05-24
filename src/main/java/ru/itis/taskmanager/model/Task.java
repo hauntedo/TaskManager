@@ -21,6 +21,8 @@ public class Task extends AbstractEntity{
 
     private String description;
 
+    private String annotation;
+
     public enum State {
         OPEN, IN_PROGRESS, RESOLVED, COMPLETED, DELETED
     }

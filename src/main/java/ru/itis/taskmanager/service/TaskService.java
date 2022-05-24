@@ -1,25 +1,26 @@
 package ru.itis.taskmanager.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import ru.itis.taskmanager.dto.request.CreateTaskDto;
-import ru.itis.taskmanager.dto.response.TaskDto;
+import ru.itis.taskmanager.dto.request.TaskRequest;
+import ru.itis.taskmanager.dto.response.TaskResponse;
 import ru.itis.taskmanager.model.Task;
 
 import java.util.List;
 
 public interface TaskService {
 
-    List<TaskDto> convertedDateTime(List<TaskDto> taskDtoList);
+    List<TaskResponse> convertedDateTime(List<TaskResponse> taskResponseList);
 
-    List<TaskDto> findAllTasksWhereTaskStateNotCompleted();
+    List<TaskResponse> findAllTasksWhereTaskStateNotCompleted();
 
-    void addTask(CreateTaskDto createTaskDto, String username);
+    void addTask(TaskRequest taskRequest, String username);
 
-    TaskDto findTaskById(String id);
+    TaskResponse findTaskById(String id);
 
-    List<TaskDto> findTasksByUsername(String username);
+    List<TaskResponse> findTasksByUsername(String username);
 
     void addUser(String username, Task task);
 
     void updateState(String taskId, String action, String username);
+
+    void updateTask(TaskRequest taskRequest, String taskId);
 }

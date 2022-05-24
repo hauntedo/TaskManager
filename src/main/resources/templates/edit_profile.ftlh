@@ -18,25 +18,31 @@
 <@header.header />
 <div class="container">
     <div class="main-body">
-        <@spring.bind path="editUserDto"/>
+        <@spring.bind path="editUser"/>
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <form action="" method="post">
+                        <form action="/profile/edit" method="post">
                             <div class="row mb-3">
                                 <label for="firstName" class="col-sm-3 col-form-label">
                                     <h6 class="mb-0">First name</h6></label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" id="firstName" name="firstName" value="${user.firstName}">
+                                    <@spring.formInput "editUser.firstName" "name='firstName'
+                                    class='form-control' placeholder='${user.firstName}'"/>
+                                    <@spring.showErrors "<br>" "error"/>
+<#--                                    <input class="form-control" id="firstName" name="firstName" value="${user.firstName}">-->
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="lastName" class="col-sm-3 col-form-label">
                                     <h6 class="mb-0">Last name</h6></label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" id="lastName" name="lastName" value="${user.lastName}">
+                                    <@spring.formInput "editUser.lastName" "name='lastName'
+                                    class='form-control' placeholder='${user.lastName}'"/>
+                                    <@spring.showErrors "<br>" "error"/>
+<#--                                    <input class="form-control" id="lastName" name="lastName" value="${user.lastName}">-->
                                 </div>
                             </div>
                             <#if user.aboutMe??>
@@ -45,17 +51,24 @@
                                     <label for="aboutMe" class="col-sm-3 col-form-label">
                                         <h6 class="mb-0">About me</h6></label>
                                     <div class="col-sm-9">
+<#--                                        <@spring.formTextarea "editUser.aboutMe" "autocomplete='on'-->
+<#--                                        id='aboutMe' class='form-control'-->
+<#--                                        name='aboutMe' autocompelete='on'">${user.aboutMe}</@spring.formTextarea>-->
+<#--                                        <@spring.showErrors "<br>" "error"/>-->
                                         <textarea id="aboutMe" class="form-control" name="aboutMe"
                                                   autocomplete="on">${user.aboutMe}</textarea>
                                     </div>
                                 </div>
-                            <#else>
+                                <#else>
                                 <div class="row mb-3">
                                     <label for="aboutMe" class="col-sm-3 col-form-label">
                                         <h6 class="mb-0">About me</h6></label>
                                     <div class="col-sm-9">
-                                        <textarea id="aboutMe" class="form-control" name="aboutMe"
-                                                  placeholder="${user.aboutMe}" autocomplete="on"></textarea>
+                                        <@spring.formTextarea "editUser.aboutMe" "id='aboutMe' class='form-control'
+                                        name='aboutMe' placeholder='About me' autocompelete='on'"/>
+                                        <@spring.showErrors "<br>" "error"/>
+<#--                                        <textarea id="aboutMe" class="form-control" name="aboutMe"-->
+<#--                                                  placeholder="About me" autocomplete="on"></textarea>-->
                                     </div>
                                 </div>
                             </#if>
@@ -63,7 +76,10 @@
                                 <label for="password" class="col-sm-3 col-form-label">
                                     <h6 class="mb-0">Password</h6></label>
                                 <div class="col-sm-9">
-                                    <input type="password" class="form-control" id="password" name="password">
+                                    <@spring.formPasswordInput "editUser.password" "name='password' id='password'
+                                    class='form-control'"/>
+                                    <@spring.showErrors "<br>" "error"/>
+<#--                                    <input type="password" class="form-control" id="password" name="password">-->
                                 </div>
                             </div>
                             <div class="row">

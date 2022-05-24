@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 @Data
-public class CommentDto {
+public class CommentResponse {
 
     private UUID id;
     private String content;
@@ -23,8 +23,8 @@ public class CommentDto {
     private String createdBy;
     private List<FileInfo> files;
 
-    public static CommentDto from(Comment comment){
-        return CommentDto.builder()
+    public static CommentResponse from(Comment comment){
+        return CommentResponse.builder()
                 .id(comment.getUuid())
                 .content(comment.getContent())
                 .createdBy(comment.getCreatedBy().getUserName())
@@ -33,8 +33,8 @@ public class CommentDto {
                 .build();
     }
 
-    public static List<CommentDto> from(List<Comment> commentList) {
-        return commentList.stream().map(CommentDto::from).collect(Collectors.toList());
+    public static List<CommentResponse> from(List<Comment> commentList) {
+        return commentList.stream().map(CommentResponse::from).collect(Collectors.toList());
     }
 
 }

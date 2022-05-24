@@ -11,34 +11,52 @@
     <title>Add task</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body class="text-center">
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
 <@header.header />
 <div class="container">
-    <@spring.bind path="taskForm"/>
     <div class="main-body">
         <div class="row">
             <div class="col-lg-2"></div>
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
+                        <@spring.bind path="taskForm"/>
                         <form action="" method="post">
                             <div class="row mb-3">
                                 <label for="aboutMe" class="col-sm-3 col-form-label">
                                     <h6 class="mb-0">Title</h6></label>
                                 <div class="col-sm-9">
-                                        <input id="title" class="form-control" name="title"
-                                                  placeholder="Title" required/>
+                                    <@spring.formInput "taskForm.title" "placeholder='Title' name='title'
+                                    class='form-control' required"/>
+                                    <@spring.showErrors "<br>" "error"/>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="aboutMe" class="col-sm-3 col-form-label">
+                                    <h6 class="mb-0">Annotation</h6></label>
+                                <div class="col-sm-9">
+                                    <@spring.formTextarea "taskForm.annotation" "placeholder='Annotation' name='annotation'
+                                        class='form-control' required"/>
+                                    <@spring.showErrors "<br>" "error"/>
+<#--                                        <textarea id="description" class="form-control" name="description"-->
+<#--                                                  placeholder="Description" autocomplete="on"></textarea>-->
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="aboutMe" class="col-sm-3 col-form-label">
                                     <h6 class="mb-0">Description</h6></label>
                                 <div class="col-sm-9">
-                                        <textarea id="description" class="form-control" name="description"
-                                                  placeholder="Description" autocomplete="on"></textarea>
+                                    <@spring.formTextarea "taskForm.description" "placeholder='Description' name='description'
+                                        class='form-control'"/>
+                                    <@spring.showErrors "<br>" "error"/>
                                 </div>
                             </div>
                             <div class="row">

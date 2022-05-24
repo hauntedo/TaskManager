@@ -1,0 +1,23 @@
+GET http://localhost/users
+has-authority: ADMIN
+
+###
+
+POST http://localhost/users
+content-type: application/json
+
+{
+  "firstName" : "firstname",
+  "lastName" : "lastname",
+  "userName" : "user2",
+  "email"  : "user2@user.user",
+  "password": "qwerty007"
+}
+
+###
+
+DELETE http://localhost/users/949a2e4f-0907-4c0f-a3b6-fb0eb139444f
+
+###
+
+PUT http://localhost/users/949a2e4f-0907-4c0f-a3b6-fb0eb139444f

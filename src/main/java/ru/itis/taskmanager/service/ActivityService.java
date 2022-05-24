@@ -1,12 +1,11 @@
 package ru.itis.taskmanager.service;
 
-import ru.itis.taskmanager.dto.request.CreateCommentDto;
-import ru.itis.taskmanager.dto.response.ActivityDto;
+import ru.itis.taskmanager.dto.response.ActivityResponse;
 
 public interface ActivityService {
 
-    ActivityDto findByTaskId(String taskId);
+    ActivityResponse findByTaskId(String taskId);
 
-    ActivityDto convertCommentDateTime(ActivityDto activityDto);
+    ActivityResponse convertCommentDateTime(ActivityResponse activityResponse);
 
 }

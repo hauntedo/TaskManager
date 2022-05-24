@@ -1,9 +1,6 @@
 package ru.itis.taskmanager.dto.response;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.itis.taskmanager.converter.DateConverter;
 import ru.itis.taskmanager.model.Task;
 
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 @Data
-public class TaskDto {
+public class TaskResponse {
 
     private UUID uuid;
     private String title;
@@ -22,20 +19,22 @@ public class TaskDto {
     private String taskState;
     private String date;
     private String createdBy;
+    private String annotation;
 
-    public static TaskDto from(Task task) {
-        return TaskDto.builder()
+    public static TaskResponse from(Task task) {
+        return TaskResponse.builder()
                 .uuid(task.getUuid())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .taskState(String.valueOf(task.getTaskState()))
                 .date(String.valueOf(task.getCreateDate()))
+                .annotation(task.getAnnotation())
                 .createdBy(task.getCreatedBy().getUserName())
                 .build();
     }
 
-    public static List<TaskDto> from(List<Task> taskList) {
-        return taskList.stream().map(TaskDto::from).collect(Collectors.toList());
+    public static List<TaskResponse> from(List<Task> taskList) {
+        return taskList.stream().map(TaskResponse::from).collect(Collectors.toList());
     }
 
 }

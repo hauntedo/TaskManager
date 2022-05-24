@@ -1,5 +1,6 @@
 package ru.itis.taskmanager.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 @Data
-public class EditUserDto {
+public class UserRequest {
 
     @NotBlank
     @Size(min = 2, max = 32)

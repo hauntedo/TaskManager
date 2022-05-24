@@ -8,14 +8,19 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class CreateCommentDto {
+public class TaskRequest {
 
-    @NotBlank
-    @Size(max = 512)
-    String content;
+    @Size(max = 20)
+    private String title;
+
+    @Size(max = 250)
+    private String annotation;
+
+    @Size(max = 1024)
+    private String description;
 
 }

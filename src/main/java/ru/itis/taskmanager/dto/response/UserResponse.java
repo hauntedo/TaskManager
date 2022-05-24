@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 @Data
-public class UserDto {
+public class UserResponse {
 
     private UUID uuid;
     private String firstName;
@@ -23,8 +23,8 @@ public class UserDto {
     private String email;
     private String aboutMe;
 
-    public static UserDto from(User user) {
-        return UserDto.builder()
+    public static UserResponse from(User user) {
+        return UserResponse.builder()
                 .uuid(user.getUuid())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -34,8 +34,8 @@ public class UserDto {
                 .build();
     }
 
-    public static List<UserDto> from(List<User> users) {
-        return users.stream().map(UserDto::from).collect(Collectors.toList());
+    public static List<UserResponse> from(List<User> users) {
+        return users.stream().map(UserResponse::from).collect(Collectors.toList());
     }
 
 }

@@ -1,16 +1,31 @@
 package ru.itis.taskmanager.service;
 
-import ru.itis.taskmanager.dto.request.EditUserDto;
-import ru.itis.taskmanager.dto.response.TaskDto;
-import ru.itis.taskmanager.dto.response.UserDto;
+import ru.itis.taskmanager.dto.request.SignUpForm;
+import ru.itis.taskmanager.dto.request.UserRequest;
+import ru.itis.taskmanager.dto.response.TaskResponse;
+import ru.itis.taskmanager.dto.response.UserResponse;
+
+import java.util.List;
 
 public interface UserService {
 
-    UserDto findUserByUsername(String username);
+    UserResponse findUserByUsername(String username);
 
-    void updateUserByUsername(EditUserDto userDto, String username);
+    void updateUserByUsername(UserRequest userDto, String username);
 
     Boolean hasUserByTaskId(String taskId, String username);
 
-    Boolean isChiefUserForTask(TaskDto task, String username);
+    Boolean isChiefUserForTask(TaskResponse task, String username);
+
+    List<UserResponse> findAll();
+
+    void registerNewAccount(SignUpForm signUpForm);
+
+    UserResponse updateUserById(String userId, UserRequest updateUser);
+
+    void deleteUserById(String userId);
+
+    void banUserById(String userId);
+    void unBanUserById(String userId);
+
 }

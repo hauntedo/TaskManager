@@ -7,9 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.taskmanager.dto.request.SignUpForm;
+import ru.itis.taskmanager.exception.OccupiedEmailException;
 import ru.itis.taskmanager.exception.PasswordMismatchException;
-import ru.itis.taskmanager.exception.UsernameExistException;
-import ru.itis.taskmanager.service.SignUpService;
+import ru.itis.taskmanager.exception.OccupiedUsernameException;
+import ru.itis.taskmanager.service.UserService;
 
 import javax.validation.Valid;
 
@@ -18,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/sign_up")
 public class SignUpController {
 
-    private final SignUpService signUpService;
+    private final UserService userService;
 
     @GetMapping
     public String getSignUpPage(Authentication authentication, Model model) {
@@ -35,14 +36,16 @@ public class SignUpController {
             model.addAttribute("signUpForm", form);
             return "sign_up";
         }
-        try {
-            signUpService.registerNewAccount(form);
-            return "redirect:/sign_in";
-        } catch(UsernameExistException e) {
-            model.addAttribute("message", "Username is exist");
-            return "sign_up";
-        } catch (PasswordMismatchException e) {
-            model.addAttribute("message", "Passwords mismatch");
+        if (form.getPassword().equals(form.getCheckPassword())) {
+            try {
+                userService.registerNewAccount(form);
+                return "redirect:/sign_in";
+            } catch (OccupiedUsernameException | OccupiedEmailException e) {
+                model.addAttribute("message", e.getMessage());
+                return "sign_up";
+            }
+        } else {
+            model.addAttribute("message", "Password is mismatch");
             return "sign_up";
         }
     }

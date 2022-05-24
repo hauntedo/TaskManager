@@ -3,7 +3,7 @@ package ru.itis.taskmanager.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.taskmanager.dto.request.CreateCommentDto;
+import ru.itis.taskmanager.dto.request.CommentRequest;
 import ru.itis.taskmanager.exception.ActivityNotFoundException;
 import ru.itis.taskmanager.exception.UserNotFoundException;
 import ru.itis.taskmanager.model.Activity;
@@ -26,7 +26,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public String addComment(CreateCommentDto commentDto, String taskId, String username) {
+    public String addComment(CommentRequest commentDto, String taskId, String username) {
         User user = userRepository.findUserByUserName(username).orElseThrow(UserNotFoundException::new);
         Activity activity = activityRepository.findActivityByTask_Uuid(UUID.fromString(taskId))
                 .orElseThrow(ActivityNotFoundException::new);
