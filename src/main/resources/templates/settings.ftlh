@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Edit profile</title>
+    <title>Settings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body class="text-center">
@@ -24,7 +24,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <form action="/profile/edit" method="post">
+                        <form action="/settings?action=edit" method="post">
                             <div class="row mb-3">
                                 <label for="firstName" class="col-sm-3 col-form-label">
                                     <h6 class="mb-0">First name</h6></label>
@@ -85,10 +85,18 @@
                             <div class="row">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-8 text-secondary">
-                                    <button type="submit" class="btn btn-primary px-4">Save</button>
-                                    <a href="/profile" class="btn btn-danger">Back</a>
+                                    <button type="submit" class="btn btn-primary px-4">Update profile</button>
                                 </div>
                                 <div class="col-sm-2"></div>
+                            </div>
+                        </form>
+                        <hr class="my-4">
+                        <form action="/settings?action=delete" method="post">
+                            <div>
+                                <h2>Delete account</h2>
+                                <p>Once you delete your account, there is no going back. Please be certain.</p>
+<#--                                <a href="/settings?action=delete" role="button" class="btn px-4 btn-danger">Delete</a>-->
+                                <button type="submit" class="btn btn-danger px-4">Delete</button>
                             </div>
                         </form>
                     </div>

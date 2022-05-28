@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
     public String addComment(CommentRequest commentDto, String taskId, String username) {
         User user = userRepository.findUserByUserName(username).orElseThrow(UserNotFoundException::new);
         Activity activity = activityRepository.findActivityByTask_Uuid(UUID.fromString(taskId))
-                .orElseThrow(ActivityNotFoundException::new);
+                .orElseThrow( () -> new ActivityNotFoundException("Activity does not connect"));
         Comment comment = Comment.builder()
                 .content(commentDto.getContent())
                 .activity(activity)

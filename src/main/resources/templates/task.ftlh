@@ -40,6 +40,9 @@
                                     <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3"></textarea>
                                     <input class="form-control" name="file" type="file" id="formFileMultiple" multiple>
                                     <button class="btn btn-primary btn-lg" type="submit">Save</button>
+                                    <#if message??>
+                                        <h6 class="text-danger">${message}</h6>
+                                    </#if>
                                 </form>
                             </#if>
                     </div>
@@ -61,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <#if task.taskState != "OPEN">
+            <#if task.taskState != "OPEN">
             <table class="table">
                 <thead>
                 <tr>

@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TaskManagerApplication {
 
     public static void main(String[] args) {
+        log.info("Before Starting application");
         SpringApplication.run(TaskManagerApplication.class, args);
     }
 

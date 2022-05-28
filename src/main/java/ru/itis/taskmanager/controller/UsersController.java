@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UsersController {
 
     private final UserService userService;
@@ -34,6 +33,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/{user-id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> banUser(@PathVariable("user-id") String userId) {
         userService.banUserById(userId);
         return ResponseEntity
@@ -42,6 +42,7 @@ public class UsersController {
     }
 
     @PutMapping("/{user-id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserResponse> unBanUser(@RequestBody UserRequest updateUser,
                                                    @PathVariable("user-id") String userId) {
         userService.unBanUserById(userId);

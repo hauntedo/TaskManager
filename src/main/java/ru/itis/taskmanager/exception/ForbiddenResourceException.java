@@ -3,9 +3,10 @@ package ru.itis.taskmanager.exception;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class TaskNotFoundException extends RuntimeException{
+public class ForbiddenResourceException extends RuntimeException {
 
-    public TaskNotFoundException(String msg) {
+    public ForbiddenResourceException(String msg) {
         super(msg);
     }
+
 }

@@ -1,6 +1,8 @@
 package ru.itis.taskmanager.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -13,11 +15,15 @@ import ru.itis.taskmanager.dto.request.TaskRequest;
 import ru.itis.taskmanager.dto.response.ActivityResponse;
 import ru.itis.taskmanager.dto.response.TaskResponse;
 import ru.itis.taskmanager.dto.response.UserResponse;
+import ru.itis.taskmanager.exception.ActivityNotFoundException;
+import ru.itis.taskmanager.exception.ForbiddenResourceException;
+import ru.itis.taskmanager.exception.TaskNotFoundException;
 import ru.itis.taskmanager.service.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
@@ -31,8 +37,14 @@ public class TaskController {
 
     @GetMapping
     public String getTasksPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("tasks", taskService.findAllTasksWhereTaskStateNotCompleted());
-        model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));
+        UserResponse user = userService.findUserByUsername(userDetails.getUsername());
+        try {
+            List<TaskResponse> tasks = taskService.findAllTasksWhereTaskStateNotCompleted();
+            model.addAttribute("tasks", tasks);
+        } catch (TaskNotFoundException e) {
+            log.error(e + ": " + e.getMessage());
+        }
+        model.addAttribute("user", user);
         return "tasks";
     }
 
@@ -55,45 +67,66 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    //не работает изменение состояний, связано со state
     @GetMapping("/{task-id}")
     public String getTaskPage(@PathVariable("task-id") String taskId, Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
                               @RequestParam(name = "action", required = false) String action) {
-        TaskResponse task = taskService.findTaskById(taskId);
-        UserResponse user = userService.findUserByUsername(userDetails.getUsername());
-        ActivityResponse activity = activityService.findByTaskId(taskId);
+       try {
+           TaskResponse task = taskService.findTaskById(taskId);
+           UserResponse user = userService.findUserByUsername(userDetails.getUsername());
+           ActivityResponse activity = activityService.findByTaskId(taskId);
 
-        //проверяет, создал ли пользователь эту задачу
-        Boolean isChief = userService.isChiefUserForTask(task, userDetails.getUsername());
+           //проверяет, создал ли пользователь эту задачу
+           Boolean isChief = userService.isChiefUserForTask(task, userDetails.getUsername());
 
-        //добавил ли пользователь эту задачу
-        Boolean state = userService.hasUserByTaskId(taskId, userDetails.getUsername());
-        //обновляет состояние задач, согласно параметрам запроса
-        if (action != null) {
-            taskService.updateState(taskId, action, userDetails.getUsername());
-            state = false;
-        }
-        model.addAttribute("task", task);
-        model.addAttribute("activity", activity);
-        model.addAttribute("chief", isChief);
-        model.addAttribute("state", state);
-        model.addAttribute("user", user);
-        if (action != null) {
-            return "redirect:/tasks/" + taskId;
-        } else {
-            return "task";
-        }
+           //добавил ли пользователь эту задачу
+           Boolean state = userService.hasUserByTaskId(taskId, userDetails.getUsername());
+           //обновляет состояние задач, согласно параметрам запроса
+           if (action != null) {
+               taskService.updateState(taskId, action, userDetails.getUsername());
+               state = false;
+           }
+           model.addAttribute("task", task);
+           model.addAttribute("activity", activity);
+           model.addAttribute("chief", isChief);
+           model.addAttribute("state", state);
+           model.addAttribute("user", user);
+           if (action != null) {
+               return "redirect:/tasks/" + taskId;
+           } else {
+               return "task";
+           }
+       } catch (TaskNotFoundException | IllegalArgumentException e) {
+           log.error(e + ": " + e.getMessage());
+           model.addAttribute("status", "404 Not Found");
+           model.addAttribute("message", "Request page not found");
+           return "exception_page";
+       } catch (ForbiddenResourceException e) {
+           log.warn(userDetails.getUsername() + " has tried to use prohibited resources");
+           model.addAttribute("status", "403 Forbidden");
+           model.addAttribute("message", e.getMessage());
+           return "exception_page";
+       }
     }
 
     @PostMapping("/{task-id}")
     public String addComment(@AuthenticationPrincipal UserDetails userDetails,
                                    @PathVariable("task-id") String taskId,
                                    CommentRequest commentDto,
-                                   @RequestParam(value = "file", required = false) MultipartFile[] files) {
-        String commentId = commentService.addComment(commentDto, taskId, userDetails.getUsername());
-        fileService.upload(files, commentId, userDetails.getUsername());
-        return "redirect:/tasks/" + taskId;
+                                   @RequestParam(value = "file", required = false) MultipartFile[] files, Model model) {
+        try {
+            String commentId = commentService.addComment(commentDto, taskId, userDetails.getUsername());
+            fileService.upload(files, commentId, userDetails.getUsername());
+            return "redirect:/tasks/" + taskId;
+        } catch (ActivityNotFoundException e) {
+            log.error(e + ": " + e.getMessage());
+            model.addAttribute("message", "Failed to add comment");
+            return "task";
+        } catch (IllegalArgumentException e) {
+            log.error(e  + ": " + e.getMessage());
+            model.addAttribute("message", "Failed to upload file(s)");
+            return "task";
+        }
     }
 
 

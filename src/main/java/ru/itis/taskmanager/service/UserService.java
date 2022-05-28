@@ -28,4 +28,5 @@ public interface UserService {
     void banUserById(String userId);
     void unBanUserById(String userId);
 
+    void deleteAccount(String username);
 }

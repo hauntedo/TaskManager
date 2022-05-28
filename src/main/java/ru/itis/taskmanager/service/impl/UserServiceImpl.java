@@ -142,4 +142,9 @@ public class UserServiceImpl implements UserService {
         user.setState(User.State.NOT_BANNED);
         userRepository.save(user);
     }
+
+    @Override
+    public void deleteAccount(String username) {
+        userRepository.deleteAccountByYourself(username);
+    }
 }

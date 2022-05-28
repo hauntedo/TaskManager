@@ -1,11 +1,13 @@
 package ru.itis.taskmanager.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itis.taskmanager.converter.DateConverter;
 import ru.itis.taskmanager.dto.request.TaskRequest;
 import ru.itis.taskmanager.dto.response.TaskResponse;
+import ru.itis.taskmanager.exception.ForbiddenResourceException;
 import ru.itis.taskmanager.exception.TaskNotFoundException;
 import ru.itis.taskmanager.exception.UserNotFoundException;
 import ru.itis.taskmanager.model.Activity;
@@ -22,6 +24,7 @@ import java.util.*;
 import static ru.itis.taskmanager.dto.response.TaskResponse.from;
 import static ru.itis.taskmanager.model.Task.State.COMPLETED;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
@@ -35,23 +38,18 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> findAllTasksWhereTaskStateNotCompleted() {
         List<Task> taskList = new ArrayList<>();
-        List<Task> helpTaskList = new ArrayList<>();
-        Iterable<Task> iterable = taskRepository.findAll();
+        Iterable<Task> iterable = taskRepository.findAllNotCompletedTasks()
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
         iterable.forEach(taskList::add);
-        for (Task t : taskList) {
-            if (t.getTaskState().toString().equals("COMPLETED")) {
-                helpTaskList.add(t);
-            }
-        }
-        taskList.removeAll(helpTaskList);
         return convertedDateTime(from(taskList));
     }
 
     @Transactional
     @Override
     public void addTask(TaskRequest taskRequest, String username) {
-
-        User user = userRepository.getByUserName(username);
+        User user = userRepository.findUserByUserName(username)
+                .orElseThrow(UserNotFoundException::new);
+        log.info("Try to create Task entity");
         Task task = Task.builder()
                 .title(taskRequest.getTitle())
                 .annotation(taskRequest.getAnnotation())
@@ -59,34 +57,42 @@ public class TaskServiceImpl implements TaskService {
                 .taskState(Task.State.OPEN)
                 .createdBy(user)
                 .build();
+        log.info("Try to add the Task for the Activity");
         Activity activity = Activity.builder()
                 .task(task)
                 .build();
         Set<User> users = new HashSet<>();
         users.add(user);
         task.setUsers(users);
+        log.info("Save Task entity");
         taskRepository.save(task);
+        log.info("Save Activity entity");
         activityRepository.save(activity);
     }
 
     @Override
     public TaskResponse findTaskById(String id) {
-        Task task = taskRepository.findById(UUID.fromString(id)).orElseThrow();
+        log.info("Send query to database.");
+        Task task = taskRepository.findById(UUID.fromString(id)).orElseThrow(
+                () -> new TaskNotFoundException("Task not found")
+        );
         return from(task);
     }
 
     @Override
     public List<TaskResponse> findTasksByUsername(String username) {
-        User user = userRepository.findUserByUserName(username).orElseThrow(UserNotFoundException::new);
-        List<Task> tasks = taskRepository.findTasksByUsers_uuid(user.getUuid());
-
+        log.info("Send query to database.");
+        List<Task> tasks = taskRepository.findTasksByUsername(username)
+                .orElseThrow(() -> new TaskNotFoundException("Tasks not found"));
         return convertedDateTime(from(tasks));
     }
 
     @Override
     public void addUser(String username, Task task) {
         User user = userRepository.findUserByUserName(username).orElseThrow(UserNotFoundException::new);
+        log.info("Try add user for the task.");
         task.getUsers().add(user);
+        log.info("Save task entity.");
         taskRepository.save(task);
     }
 
@@ -94,6 +100,7 @@ public class TaskServiceImpl implements TaskService {
     public void updateState(String taskId, String action, String username) {
         Task task = taskRepository.findById(UUID.fromString(taskId))
                 .orElseThrow(TaskNotFoundException::new);
+        boolean isChief = task.getCreatedBy().getUserName().equals(username);
         switch (action) {
             case "add":
                 addUser(username, task);
@@ -101,17 +108,25 @@ public class TaskServiceImpl implements TaskService {
                 taskRepository.save(task);
                 break;
             case "resend":
-                task.setTaskState(Task.State.IN_PROGRESS);
-                taskRepository.save(task);
-                break;
+                if (isChief) {
+                    task.setTaskState(Task.State.IN_PROGRESS);
+                    taskRepository.save(task);
+                    break;
+                } else {
+                    throw new ForbiddenResourceException("You dont have access");
+                }
             case "send":
                 task.setTaskState(Task.State.RESOLVED);
                 taskRepository.save(task);
                 break;
             case "accept":
-                task.setTaskState(COMPLETED);
-                taskRepository.save(task);
-                break;
+                if (isChief) {
+                    task.setTaskState(COMPLETED);
+                    taskRepository.save(task);
+                    break;
+                } else {
+                    throw new ForbiddenResourceException("You dont have access");
+                }
             default:
                 throw new IllegalArgumentException("Unknown command");
         }
@@ -131,6 +146,7 @@ public class TaskServiceImpl implements TaskService {
         if (!taskRequest.getDescription().isEmpty()) {
             task.setDescription(taskRequest.getDescription());
         }
+        log.info("update entity");
         taskRepository.save(task);
     }
 

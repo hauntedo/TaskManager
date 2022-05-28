@@ -27,30 +27,4 @@ public class ProfileController {
         return "profile";
     }
 
-    @GetMapping(value = "/edit")
-    public String getProfileEditPage(Model model,
-                                     @AuthenticationPrincipal UserDetails userDetails) {
-        UserResponse userResponse = userService.findUserByUsername(userDetails.getUsername());
-        model.addAttribute("user", userResponse);
-        model.addAttribute("editUser", new UserRequest());
-        return "edit_profile";
-    }
-
-    @PostMapping(value = "/edit")
-    public String editProfile(@Valid UserRequest userDto, BindingResult result, Model model,
-                              @AuthenticationPrincipal UserDetails userDetails) {
-        if (result.hasErrors()) {
-            model.addAttribute("editUser", userDto);
-            model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));
-            return "profile";
-        }
-        userService.updateUserByUsername(userDto , userDetails.getUsername());
-        model.addAttribute("editUser", userDto);
-        return "redirect:/profile";
-    }
-
-
-
-
-
 }
