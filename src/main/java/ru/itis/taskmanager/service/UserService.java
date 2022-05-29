@@ -6,6 +6,7 @@ import ru.itis.taskmanager.dto.response.TaskResponse;
 import ru.itis.taskmanager.dto.response.UserResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -21,6 +22,8 @@ public interface UserService {
 
     void registerNewAccount(SignUpForm signUpForm);
 
+    UserResponse findUserById(UUID id);
+
     UserResponse updateUserById(String userId, UserRequest updateUser);
 
     void deleteUserById(String userId);
@@ -29,4 +32,10 @@ public interface UserService {
     void unBanUserById(String userId);
 
     void deleteAccount(String username);
+
+    void changePassword(String code, String password);
+
+    void deleteConfirmCode(String code);
+
+    UserResponse findByConfirmCode(String code);
 }

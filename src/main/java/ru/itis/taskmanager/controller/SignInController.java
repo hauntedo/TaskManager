@@ -14,7 +14,7 @@ import ru.itis.taskmanager.exception.UserNotFoundException;
 @RequiredArgsConstructor
 public class SignInController {
 
-    @GetMapping()
+    @GetMapping
     public String getSignInPage(Authentication authentication,
                                 @RequestParam(value = "error", required = false) String error,
                                 Model model) {

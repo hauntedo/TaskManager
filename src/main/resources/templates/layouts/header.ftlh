@@ -21,7 +21,7 @@
                             <li><a class="dropdown-item" href="/settings">Settings</a></li>
                             <li><a class="dropdown-item" href="/tasks/my">My Tasks</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/sign_out">Sign out</a></li>
+                            <li><a class="dropdown-item btn-danger" href="/sign_out">Sign out</a></li>
                         </ul>
                     </div>
                 </div>

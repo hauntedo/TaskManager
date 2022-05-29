@@ -1,6 +1,7 @@
 package ru.itis.taskmanager.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.itis.taskmanager.dto.request.SignUpForm;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 import static ru.itis.taskmanager.dto.response.UserResponse.from;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -108,6 +110,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse findUserById(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return from(user);
+    }
+
+    @Override
     public UserResponse updateUserById(String userId, UserRequest updatingUser) {
         User user = userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(UserNotFoundException::new);
@@ -147,4 +156,31 @@ public class UserServiceImpl implements UserService {
     public void deleteAccount(String username) {
         userRepository.deleteAccountByYourself(username);
     }
+
+    @Override
+    public void changePassword(String code, String password) {
+        User user = userRepository.findByConfirmCode(UUID.fromString(code))
+                        .orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.setHashPassword(passwordEncoder.encode(password));
+        log.info("Save user entity(password).");
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteConfirmCode(String code) {
+        User user = userRepository.findByConfirmCode(UUID.fromString(code))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.setConfirmCode(null);
+        log.info("Save user entity(confirm code)");
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserResponse findByConfirmCode(String code) {
+        User user = userRepository.findByConfirmCode(UUID.fromString(code))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        return from(user);
+    }
+
+
 }

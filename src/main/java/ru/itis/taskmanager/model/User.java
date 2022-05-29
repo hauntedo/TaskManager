@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -32,6 +33,9 @@ public class User extends AbstractEntity {
 
     @Column(name = "about_me")
     private String aboutMe;
+
+    @Column(name = "confirm_code")
+    private UUID confirmCode;
 
     @Column(nullable = false, unique = true)
     private String email;
