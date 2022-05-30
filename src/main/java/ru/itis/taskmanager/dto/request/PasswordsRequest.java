@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.itis.taskmanager.validation.ValidPassword;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,7 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PasswordsRequest {
 
+    @ValidPassword
     private String password;
 
+    @ValidPassword
     private String passwordCheck;
 }
