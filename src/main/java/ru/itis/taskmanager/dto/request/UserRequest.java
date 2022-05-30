@@ -17,19 +17,15 @@ import javax.validation.constraints.Size;
 @Data
 public class UserRequest {
 
-    @NotBlank
-    @Size(min = 2, max = 32)
+    @Size(max = 32)
     private String firstName;
 
-    @NotBlank
-    @Size(min = 2, max = 32)
+    @Size(max = 32)
     private String lastName;
 
-    @NotEmpty
     @ValidPassword
     private String password;
 
-    @NotEmpty
     @Size(max = 1024)
     private String aboutMe;
 
