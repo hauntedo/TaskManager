@@ -81,17 +81,7 @@
 <#--                                    <input type="password" class="form-control" id="password" name="password">-->
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <label for="password" class="col-sm-3 col-form-label">
-                                    <h6 class="mb-0">Repeat Password</h6></label>
-                                <div class="col-sm-9">
-                                    <input type="password" class="form-control" id="passwordCheck" name="passwordCheck"
-                                           placeholder="Password" required>
-                                </div>
-                            </div>
-                            <#if message??>
-                                <h6 class="text-danger">${message}</h6>
-                            </#if>
+
                             <div class="row">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-8 text-secondary">
