@@ -10,6 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Task</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
 </head>
 <body>
 <@header.header />
@@ -34,9 +35,11 @@
                     </#if>
                     <div class="mb-3">
                             <#if task.taskState != "COMPLETED">
+                                <br>
                                 <form action="/tasks/${task.uuid}" method="post" enctype="multipart/form-data">
                                     <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3"></textarea>
                                     <input class="form-control" name="file" type="file" id="formFileMultiple" multiple>
+                                    <br>
                                     <button class="btn btn-primary btn-lg" type="submit">Save</button>
                                     <#if message??>
                                         <h6 class="text-danger">${message}</h6>
