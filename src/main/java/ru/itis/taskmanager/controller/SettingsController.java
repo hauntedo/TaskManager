@@ -38,8 +38,7 @@ public class SettingsController {
     @PostMapping
     public String editProfile(@Valid UserRequest userDto, BindingResult result, Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
-                              @RequestParam(name = "action", required = false) String action,
-                              @RequestParam(name = "passwordCheck", required = false) String passwordCheck) {
+                              @RequestParam(name = "action", required = false) String action) {
         if (action != null) {
             switch (action) {
                 case "edit":
@@ -48,16 +47,9 @@ public class SettingsController {
                         model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));
                         return "settings";
                     }
-                    if (userDto.getPassword().equals(passwordCheck)) {
-                        userService.updateUserByUsername(userDto , userDetails.getUsername());
-                        model.addAttribute("editUser", userDto);
-                        return "redirect:/profile";
-                    } else {
-                        model.addAttribute("message", "Password is mismatch");
-                        model.addAttribute("editUser", userDto);
-                        model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));
-                        return "settings";
-                    }
+                    userService.updateUserByUsername(userDto , userDetails.getUsername());
+                    model.addAttribute("editUser", userDto);
+                    return "redirect:/profile";
                 case "delete":
                     userService.deleteAccount(userDetails.getUsername());
                     return "redirect:/sign_out";
