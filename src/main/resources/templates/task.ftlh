@@ -34,9 +34,11 @@
                     </#if>
                     <div class="mb-3">
                             <#if task.taskState != "COMPLETED">
+                                <br>
                                 <form action="/tasks/${task.uuid}" method="post" enctype="multipart/form-data">
                                     <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3"></textarea>
                                     <input class="form-control" name="file" type="file" id="formFileMultiple" multiple>
+                                    <br>
                                     <button class="btn btn-primary btn-lg" type="submit">Save</button>
                                     <#if message??>
                                         <h6 class="text-danger">${message}</h6>
