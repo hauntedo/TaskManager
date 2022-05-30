@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class FreeMarkerEmailGenerator {
 
-    public static final String CONFIRM_LINK_PREFIX = "localhost/change/";
+    public static final String CONFIRM_LINK_PREFIX = "https://hauntedotaskmanager.herokuapp.com/change/";
     @Autowired
     private final FreeMarkerConfigurer configurer;
 

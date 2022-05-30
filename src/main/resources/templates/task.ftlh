@@ -82,7 +82,7 @@
                             <td>
                                 <#if comment.files??>
                                     <#list comment.files as file>
-                                        <a target="_blank" href="http://localhost/files/${file.storageFileName}" class="btn btn-primary px-4"
+                                        <a target="_blank" href="https://hauntedotaskmanager.herokuapp.com/files/${file.storageFileName}" class="btn btn-primary px-4"
                                            role="button">${file.originalFileName}</a>
                                     </#list>
                                 </#if>
