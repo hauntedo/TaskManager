@@ -5,22 +5,12 @@ import ru.itis.taskmanager.validation.ValidPassword;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import static ru.itis.taskmanager.util.constant.Constant.PASSWORD_REGEX;
+
 public class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        if (value == null) {
-            return false;
-        }
-        int len = value.length();
-        if (len < 8) {
-            return false;
-        }
-        for (int i = 0; i < len; i++) {
-            if ((!Character.isLetterOrDigit(value.charAt(i)))) {
-                return false;
-            }
-        }
-        return true;
+        return value.matches(PASSWORD_REGEX);
     }
 }

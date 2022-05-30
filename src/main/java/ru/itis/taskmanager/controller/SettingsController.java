@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.itis.taskmanager.dto.request.UserRequest;
 import ru.itis.taskmanager.dto.response.UserResponse;
+import ru.itis.taskmanager.exception.TaskNotFoundException;
+import ru.itis.taskmanager.exception.UnknownActionException;
 import ru.itis.taskmanager.service.UserService;
 
 import javax.validation.Valid;
@@ -52,9 +54,8 @@ public class SettingsController {
                     userService.deleteAccount(userDetails.getUsername());
                     return "redirect:/sign_out";
                 default:
-                    model.addAttribute("status", "404 Not Found");
-                    model.addAttribute("message", "Request page not found");
-                    return "exception_page";
+                    log.error("");
+                    throw new UnknownActionException();
             }
         } else {
             return "settings";

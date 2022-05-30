@@ -23,8 +23,6 @@
                     <h1 class="display-5 fw-bold">${task.title}</h1>
                     <p class="col-md-8 fs-4">${task.description}</p>
                     <p>Created by: ${task.createdBy}</p>
-                    <button type="button" onClick="document.location='/tasks'"
-                            class="btn btn-primary btn-lg">Back</button>
                     <#if chief>
                         <button type="button" onClick="document.location='/tasks/${task.uuid}/edit'"
                             class="btn btn-primary btn-lg">Edit</button>

@@ -17,6 +17,22 @@
 <@header.header />
 <div class="container">
     <a class="btn btn-primary" href="/tasks/add" role="button">Add</a>
+    <ul class="nav nav-tabs justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" href="/tasks?section=OPEN">Open</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/tasks?section=IN_PROGRESS">In progress</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/tasks?section=RESOLVED">Resolved</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/tasks?section=COMPLETED">Completed</a>
+        </li>
+    </ul>
+
+    <br>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <#if tasks??>
             <#list tasks as task>
@@ -26,6 +42,8 @@
                             <h2>${task.title}</h2>
                             <p class="card-text">${task.annotation}</p>
                             <small class="text-muted">${task.createdBy}</small>
+                            <br>
+                            <small class="text-muted">${task.taskState}</small>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <button type="button" onClick="document.location='/tasks/${task.uuid}'" class="btn btn-sm btn-outline-secondary">View</button>

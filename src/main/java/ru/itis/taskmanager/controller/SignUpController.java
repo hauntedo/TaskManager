@@ -31,12 +31,13 @@ public class SignUpController {
     }
 
     @PostMapping
-    public String signUp(@Valid SignUpForm form, BindingResult result, Model model) {
+    public String signUp(@Valid SignUpForm form, BindingResult result, Model model,
+                         @RequestParam("checkPassword") String checkPassword) {
         if (result.hasErrors()) {
             model.addAttribute("signUpForm", form);
             return "sign_up";
         }
-        if (form.getPassword().equals(form.getCheckPassword())) {
+        if (form.getPassword().equals(checkPassword)) {
             try {
                 userService.registerNewAccount(form);
                 return "redirect:/sign_in";

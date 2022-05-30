@@ -18,4 +18,9 @@ public interface TaskRepository extends CrudRepository<Task, UUID> {
             "(select uuid from account where username = :username)")
     Optional<List<Task>> findTasksByUsername(@Param("username") String username);
 
+    @Query(nativeQuery = true, value = "select count(*) from account_task where task_id = :taskId")
+    Integer takeCountOfUserForTask(@Param("taskId") UUID taskId);
+
+    List<Task> findTasksByTaskState(Task.State taskState);
+
 }

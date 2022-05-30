@@ -23,4 +23,8 @@ public interface TaskService {
     void updateState(String taskId, String action, String username);
 
     void updateTask(TaskRequest taskRequest, String taskId);
+
+    Integer takeCountOfUserForTask(String taskId);
+
+    List<TaskResponse> findTasksByState(String section);
 }

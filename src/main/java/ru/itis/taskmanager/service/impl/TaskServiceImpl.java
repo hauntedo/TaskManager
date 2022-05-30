@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.itis.taskmanager.dto.response.TaskResponse.from;
-import static ru.itis.taskmanager.model.Task.State.COMPLETED;
+import static ru.itis.taskmanager.model.Task.State.*;
 
 @Slf4j
 @Service
@@ -50,6 +50,11 @@ public class TaskServiceImpl implements TaskService {
         User user = userRepository.findUserByUserName(username)
                 .orElseThrow(UserNotFoundException::new);
         log.info("Try to create Task entity");
+        if (taskRequest.getAnnotation().length() < 250) {
+            String newAnnotation = taskRequest.getAnnotation();
+            int diff = 250 - newAnnotation.length();
+            taskRequest.setAnnotation(newAnnotation + " ".repeat(diff));
+        }
         Task task = Task.builder()
                 .title(taskRequest.getTitle())
                 .annotation(taskRequest.getAnnotation())
@@ -128,7 +133,7 @@ public class TaskServiceImpl implements TaskService {
                     throw new ForbiddenResourceException("You dont have access");
                 }
             default:
-                throw new IllegalArgumentException("Unknown command");
+                throw new TaskNotFoundException();
         }
 
     }
@@ -151,6 +156,27 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Integer takeCountOfUserForTask(String taskId) {
+        return taskRepository.takeCountOfUserForTask(UUID.randomUUID());
+    }
+
+    @Override
+    public List<TaskResponse> findTasksByState(String section) {
+        switch (section) {
+            case "OPEN":
+                return convertedDateTime(from(taskRepository.findTasksByTaskState(OPEN)));
+            case "IN_PROGRESS":
+                return convertedDateTime(from(taskRepository.findTasksByTaskState(IN_PROGRESS)));
+            case "RESOLVED":
+                return convertedDateTime(from(taskRepository.findTasksByTaskState(RESOLVED)));
+            case "COMPLETED":
+                return convertedDateTime(from(taskRepository.findTasksByTaskState(COMPLETED)));
+            default:
+                throw new TaskNotFoundException();
+        }
+    }
+
+    @Override
     public List<TaskResponse> convertedDateTime(List<TaskResponse> taskResponseList) {
         if (!taskResponseList.isEmpty()) {
             for (TaskResponse taskResponse : taskResponseList) {
@@ -161,6 +187,8 @@ public class TaskServiceImpl implements TaskService {
         }
         return taskResponseList;
     }
+
+
 
 
 }

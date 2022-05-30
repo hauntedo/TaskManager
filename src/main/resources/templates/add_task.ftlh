@@ -63,7 +63,7 @@
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-9 text-secondary">
                                     <button type="submit" class="btn btn-primary px-4">Add</button>
-                                    <a href="/tasks" class="btn btn-danger">Back</a>
+                                    <a href="/tasks" class="btn btn-danger">Cancel</a>
                                 </div>
                             </div>
                         </form>

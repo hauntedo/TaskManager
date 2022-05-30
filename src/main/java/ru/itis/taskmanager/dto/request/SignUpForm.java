@@ -32,7 +32,5 @@ public class SignUpForm {
     @Email(regexp = EMAIL_REGEX)
     private String email;
 
-    @ValidPassword
-    private String checkPassword;
 
 }

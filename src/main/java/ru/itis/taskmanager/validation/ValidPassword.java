@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPassword {
 
-    String message() default "incorrect password";
+    String message() default "Password must contain digits, upper case alphabet, lower case alphabet, special characters, and 8 characters.";
 
     Class<?>[] groups() default {};
 

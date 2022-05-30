@@ -21,6 +21,7 @@ import ru.itis.taskmanager.exception.TaskNotFoundException;
 import ru.itis.taskmanager.service.*;
 
 import javax.validation.Valid;
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -36,13 +37,19 @@ public class TaskController {
     private final CommentService commentService;
 
     @GetMapping
-    public String getTasksPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String getTasksPage(Model model, @AuthenticationPrincipal UserDetails userDetails,
+                               @RequestParam(value = "section", required = false) String section) {
         UserResponse user = userService.findUserByUsername(userDetails.getUsername());
-        try {
-            List<TaskResponse> tasks = taskService.findAllTasksWhereTaskStateNotCompleted();
+        if (section == null) {
+            try {
+                List<TaskResponse> tasks = taskService.findAllTasksWhereTaskStateNotCompleted();
+                model.addAttribute("tasks", tasks);
+            } catch (TaskNotFoundException e) {
+                log.error(e + ": " + e.getMessage());
+            }
+        } else {
+            List<TaskResponse> tasks = taskService.findTasksByState(section);
             model.addAttribute("tasks", tasks);
-        } catch (TaskNotFoundException e) {
-            log.error(e + ": " + e.getMessage());
         }
         model.addAttribute("user", user);
         return "tasks";
@@ -71,42 +78,36 @@ public class TaskController {
     public String getTaskPage(@PathVariable("task-id") String taskId, Model model,
                               @AuthenticationPrincipal UserDetails userDetails,
                               @RequestParam(name = "action", required = false) String action) {
-       try {
-           TaskResponse task = taskService.findTaskById(taskId);
-           UserResponse user = userService.findUserByUsername(userDetails.getUsername());
-           ActivityResponse activity = activityService.findByTaskId(taskId);
+       TaskResponse task = taskService.findTaskById(taskId);
+       Integer count = taskService.takeCountOfUserForTask(taskId);
+       UserResponse user = userService.findUserByUsername(userDetails.getUsername());
+       ActivityResponse activity = activityService.findByTaskId(taskId);
 
-           //проверяет, создал ли пользователь эту задачу
-           Boolean isChief = userService.isChiefUserForTask(task, userDetails.getUsername());
+       //проверяет, создал ли пользователь эту задачу
+       Boolean isChief = userService.isChiefUserForTask(task, userDetails.getUsername());
 
-           //добавил ли пользователь эту задачу
-           Boolean state = userService.hasUserByTaskId(taskId, userDetails.getUsername());
-           //обновляет состояние задач, согласно параметрам запроса
-           if (action != null) {
-               taskService.updateState(taskId, action, userDetails.getUsername());
-               state = false;
-           }
-           model.addAttribute("task", task);
-           model.addAttribute("activity", activity);
-           model.addAttribute("chief", isChief);
-           model.addAttribute("state", state);
-           model.addAttribute("user", user);
-           if (action != null) {
-               return "redirect:/tasks/" + taskId;
-           } else {
-               return "task";
-           }
-       } catch (TaskNotFoundException | IllegalArgumentException e) {
-           log.error(e + ": " + e.getMessage());
-           model.addAttribute("status", "404 Not Found");
-           model.addAttribute("message", "Request page not found");
-           return "exception_page";
-       } catch (ForbiddenResourceException e) {
-           log.warn(userDetails.getUsername() + " has tried to use prohibited resources");
-           model.addAttribute("status", "403 Forbidden");
-           model.addAttribute("message", e.getMessage());
-           return "exception_page";
+       Instant start = Instant.parse(task.getDate());
+
+
+       //добавил ли пользователь эту задачу
+       Boolean state = userService.hasUserByTaskId(taskId, userDetails.getUsername());
+       //обновляет состояние задач, согласно параметрам запроса
+       if (action != null) {
+           taskService.updateState(taskId, action, userDetails.getUsername());
+           state = false;
        }
+       model.addAttribute("task", task);
+       model.addAttribute("count", count);
+       model.addAttribute("activity", activity);
+       model.addAttribute("chief", isChief);
+       model.addAttribute("state", state);
+       model.addAttribute("user", user);
+       if (action != null) {
+           return "redirect:/tasks/" + taskId;
+       } else {
+           return "task";
+       }
+
     }
 
     @PostMapping("/{task-id}")
@@ -114,19 +115,9 @@ public class TaskController {
                                    @PathVariable("task-id") String taskId,
                                    CommentRequest commentDto,
                                    @RequestParam(value = "file", required = false) MultipartFile[] files, Model model) {
-        try {
-            String commentId = commentService.addComment(commentDto, taskId, userDetails.getUsername());
-            fileService.upload(files, commentId, userDetails.getUsername());
-            return "redirect:/tasks/" + taskId;
-        } catch (ActivityNotFoundException e) {
-            log.error(e + ": " + e.getMessage());
-            model.addAttribute("message", "Failed to add comment");
-            return "task";
-        } catch (IllegalArgumentException e) {
-            log.error(e  + ": " + e.getMessage());
-            model.addAttribute("message", "Failed to upload file(s)");
-            return "task";
-        }
+        String commentId = commentService.addComment(commentDto, taskId, userDetails.getUsername());
+        fileService.upload(files, commentId, userDetails.getUsername());
+        return "redirect:/tasks/" + taskId;
     }
 
 

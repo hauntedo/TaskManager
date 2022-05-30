@@ -22,7 +22,7 @@
         </#if>
 
         <div class="form-floating">
-            <input type="text" name="userName" class="form-control" id="floatingInput" placeholder="Username">
+            <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username">
             <label for="floatingInput">Username</label>
             <br>
         </div>
@@ -34,7 +34,7 @@
 
         <div class="checkbox mb-3">
             <label>
-                <input type="checkbox" value="remember-me"> Remember me
+                <input type="checkbox" name="rememberMe">Remember me
             </label>
             <a class="pull-right" href="/forgot_password">Forgot password?</a>
         </div>

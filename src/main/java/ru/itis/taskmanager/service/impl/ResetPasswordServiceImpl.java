@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import ru.itis.taskmanager.exception.EmailSendingException;
 import ru.itis.taskmanager.exception.UserNotFoundException;
 import ru.itis.taskmanager.model.User;
 import ru.itis.taskmanager.repository.UserRepository;
@@ -36,12 +37,13 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         userRepository.save(user);
         log.info("Create FreeMarkerEmailGenerator");
         FreeMarkerEmailGenerator freeMarkerEmailGenerator = new FreeMarkerEmailGenerator(freeMarkerConfigurer);
-
         try {
             String template = freeMarkerEmailGenerator.getResetPasswordEmail(user);
+            log.info("Sending email");
             emailUtil.sendMail(user.getEmail(), "Reset password", template);
         } catch (TemplateException | IOException e) {
-            throw new RuntimeException(e);
+            log.error(e + ": " + e.getMessage());
+            throw new EmailSendingException();
         }
 
     }

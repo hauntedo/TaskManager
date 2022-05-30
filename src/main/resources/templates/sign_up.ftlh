@@ -14,9 +14,8 @@
 <body class="text-center">
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
-<script src="<@spring.url "/static/js/passwordCheck.js"/>"></script>
 <main class="form-signin">
-    <form action="/sign_up" method="post">
+    <form action="/sign_up" onsubmit="checkPassword()" method="post">
         <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
         <@spring.bind path="signUpForm"/>
         <div class="form-floating">
@@ -56,16 +55,32 @@
         </div>
 
         <div class="form-floating">
-            <@spring.formPasswordInput "signUpForm.checkPassword" "id='checkPassword' name='checkPassword'
-            placeholder='Password' class=form-control required"/>
+            <input type="password" class="form-control" id="checkPassword" name="checkPassword"
+            placeholder="Password" required>
             <label for="repeatPassword">Repeat Password</label>
-            <@spring.showErrors "<br>" "error"/>
+            <#--            <@spring.formPasswordInput "signUpForm.checkPassword" "id='checkPassword' name='checkPassword'-->
+<#--            placeholder='Password' class=form-control required"/>-->
+
+<#--            <@spring.showErrors "<br>" "error"/>-->
             <br>
         </div>
 
         <#if message??>
             <h6 class="text-danger">${message}</h6>
         </#if>
+
+        <script>
+            let password = document.getElementById('password').value;
+            let passwordCheck = document.getElementById('checkPassword').value;
+
+            function checkPassword() {
+                if (password !== passwordCheck) {
+                    alert("Password is mismatch")
+                } else {
+                    alert();
+                }
+            }
+        </script>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
         <p class="text-center">

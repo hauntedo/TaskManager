@@ -67,7 +67,7 @@ public class FileServiceImpl implements FileService {
                         Files.copy(file.getInputStream(), Paths.get(storagePath, fileInfo.getStorageFileName()));
                         fileInfoRepository.save(fileInfo);
                     } catch (IOException e) {
-                        throw new IllegalArgumentException(e);
+                        throw new FileNotFoundException();
                     }
                 }
             }
@@ -85,7 +85,7 @@ public class FileServiceImpl implements FileService {
             IOUtils.copy(new FileInputStream(storagePath + "/" + file.getStorageFileName()), response.getOutputStream());
             response.flushBuffer();
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            throw new FileNotFoundException();
         }
     }
 }
