@@ -22,7 +22,6 @@ public class UserRequest {
     @Size(max = 32)
     private String lastName;
 
-    @ValidPassword
     private String password;
 
     @Size(max = 1024)
