@@ -1,1 +1,1 @@
-# TaskManager
+# TaskManager - мини-проект для распределения задач. 
